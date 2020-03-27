@@ -8,6 +8,21 @@ if apt-cache show linux-headers-$(uname -r) 2&>1 >/dev/null; then
   apt-get install -y \
     linux-headers-$(uname -r) \
     wireguard
+elif uname -v | grep -q 'Ubuntu'; then
+  curl -s http://archive.ubuntu.com/ubuntu/dists/xenial/Release.gpg | apt-key add -
+  echo -e \
+    "deb http://archive.ubuntu.com/ubuntu/ xenial main restricted\ndeb-src http://archive.ubuntu.com/ubuntu/ xenial main restricted\n\ndeb http://archive.ubuntu.com/ubuntu/ xenial-updates main restricted\ndeb-src http://archive.ubuntu.com/ubuntu/ xenial-updates main restricted" \
+    > /etc/apt/sources.list.d/xenial.list
+  apt-get update
+  if apt-cache show linux-headers-$(uname -r) 2&>1 >/dev/null; then
+    apt-get install -y \
+      linux-headers-$(uname -r) \
+      wireguard
+  else
+    echo "No kernel headers found!! Will try the headers from the wireguard ppa, may or may not work"
+    apt-get install -y \
+      wireguard
+  fi
 elif uname -v | grep -q 'Debian'; then
   curl -s https://ftp-master.debian.org/keys/archive-key-10.asc | apt-key add -
   echo -e \
