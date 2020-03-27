@@ -27,13 +27,15 @@ elif uname -v | grep -q 'Debian'; then
         linux-headers-$(uname -r) \
         wireguard
     else
-      echo "No kernel headers found!!"
-      exit 1
+      echo "No kernel headers found!! Will try the headers from the wireguard ppa, may or may not work"
+      apt-get install -y \
+        wireguard
     fi
   fi
 else
-  echo "No kernel headers found!!"
-  exit 1
+  echo "No kernel headers found!! Will try the headers from the wireguard ppa, may or may not work"
+  apt-get install -y \
+    wireguard
 fi
 
 rm -rf /etc/wireguard
