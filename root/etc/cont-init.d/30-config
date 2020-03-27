@@ -1,0 +1,17 @@
+#!/usr/bin/with-contenv bash
+
+mkdir -p /config/server
+
+# install headers and wireguard
+apt-get update
+apt-get install -y \
+  linux-headers-$(uname -r) \
+  wireguard
+
+rm -rf /etc/wireguard
+mkdir -p /etc/wireguard
+ln -s /config/wg0.conf /etc/wireguard/wg0.conf
+
+# permissions
+chown -R abc:abc \
+	/config
