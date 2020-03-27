@@ -4,9 +4,37 @@ mkdir -p /config/server
 
 # install headers and wireguard
 apt-get update
-apt-get install -y \
-  linux-headers-$(uname -r) \
-  wireguard
+if apt-cache show linux-headers-$(uname -r) 2&>1 >/dev/null; then
+  apt-get install -y \
+    linux-headers-$(uname -r) \
+    wireguard
+elif uname -v | grep -q 'Debian'; then
+  curl -s https://ftp-master.debian.org/keys/archive-key-10.asc | apt-key add -
+  echo -e \
+    "deb http://deb.debian.org/debian buster main contrib non-free\ndeb-src http://deb.debian.org/debian buster main contrib non-free" \
+    > /etc/apt/sources.list.d/debian.list
+  apt-get update
+  if apt-cache show linux-headers-$(uname -r) 2&>1 >/dev/null; then
+    apt-get install -y \
+      linux-headers-$(uname -r) \
+      wireguard
+  else
+    curl -s https://ftp-master.debian.org/keys/archive-key-9.asc | apt-key add -
+    sed -i 's/buster/stretch/g' /etc/apt/sources.list.d/debian.list
+    apt-get update
+    if apt-cache show linux-headers-$(uname -r) 2&>1 >/dev/null; then
+      apt-get install -y \
+        linux-headers-$(uname -r) \
+        wireguard
+    else
+      echo "No kernel headers found!!"
+      exit 1
+    fi
+  fi
+else
+  echo "No kernel headers found!!"
+  exit 1
+fi
 
 rm -rf /etc/wireguard
 mkdir -p /etc/wireguard
