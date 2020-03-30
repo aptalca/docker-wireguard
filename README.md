@@ -73,7 +73,7 @@ docker create \
   -p 51820:51820/udp \
   -v /path/to/appdata/config:/config \
   -v /lib/modules:/lib/modules \
-  --sysctl="net.ipv4.conf.all.src_valid_mark=1" `#optional` \
+  --sysctl="net.ipv4.conf.all.src_valid_mark=1" \
   --restart unless-stopped \
   linuxserver/wireguard
 ```
@@ -84,8 +84,7 @@ docker create \
 Compatible with docker-compose v2 schemas.
 
 ```
----
-version: "2"
+version: "2.1"
 services:
   wireguard:
     image: linuxserver/wireguard
@@ -105,8 +104,10 @@ services:
       - /lib/modules:/lib/modules
     ports:
       - 51820:51820/udp
-    sysctls: "net.ipv4.conf.all.src_valid_mark=1" #optional \
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
+
 ```
 
 ## Parameters
