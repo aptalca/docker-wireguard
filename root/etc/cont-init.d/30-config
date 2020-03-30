@@ -85,7 +85,7 @@ DUDE
     fi
     cat <<DUDE > /config/peer${i}/peer${i}.conf
 [Interface]
-Address = 10.13.13.${i}
+Address = 10.13.13.$(( $i + 1 ))
 PrivateKey = $(cat /config/peer${i}/privatekey-peer${i})
 ListenPort = 51820
 DNS = 10.13.13.1
@@ -98,7 +98,7 @@ DUDE
     cat <<DUDE >> /config/wg0.conf
 [Peer]
 PublicKey = $(cat /config/peer${i}/publickey-peer${i})
-AllowedIPs = 10.13.13.${i}/32
+AllowedIPs = 10.13.13.$(( $i + 1 ))/32
 
 DUDE
     echo "PEER ${i} QR code:"

@@ -81,6 +81,8 @@ app_setup_block: |
 
   ## Server Mode
   Pass the environment variables `SERVERURL`, `SERVERPORT` and `PEERS` and the container will generate all necessary confs for both the server and the clients. The client config qr codes will be output in the docker log. They will also be saved in text and png format under `/config/peerX`.
+  
+  If there is an existing `/config/wg0.conf`, the above environment variables won't have any affect. To add more peers/clients later on, you can run `docker exec -it wireguard /app/add-peer` while the container is running.
 
   ## Client Mode
   Drop your client conf into the config folder as `/config/wg0.conf` and start the container. 
