@@ -31,6 +31,7 @@ DUDE
     echo "PEER ${i} QR code:"
     qrencode -t ansiutf8 < /config/peer${i}/peer${i}.conf
     qrencode -o /config/peer${i}/peer${i}.png < /config/peer${i}/peer${i}.conf
+    chown -R abc:abc /config/peer${i}
     break
   fi
 done
