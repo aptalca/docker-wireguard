@@ -10,12 +10,14 @@ for i in {1..254}; do
       umask 077
       wg genkey | tee /config/peer${i}/privatekey-peer${i} | wg pubkey > /config/peer${i}/publickey-peer${i}
     fi
+    SERVERPORT=${SERVERPORT:-51820}
+    PEERDNS=${PEERDNS:-8.8.8.8}
     cat <<DUDE > /config/peer${i}/peer${i}.conf
 [Interface]
 Address = 10.13.13.$(( $i + 1 ))
 PrivateKey = $(cat /config/peer${i}/privatekey-peer${i})
 ListenPort = 51820
-DNS = 10.13.13.1
+DNS = ${PEERDNS}
 
 [Peer]
 PublicKey = $(cat /config/server/publickey-server)

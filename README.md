@@ -70,6 +70,7 @@ docker create \
   -e SERVERURL=wireguard.domain.com `#optional` \
   -e SERVERPORT=51820 `#optional` \
   -e PEERS=1 `#optional` \
+  -e PEERDNS=8.8.8.8 `#optional` \
   -p 51820:51820/udp \
   -v /path/to/appdata/config:/config \
   -v /lib/modules:/lib/modules \
@@ -123,6 +124,7 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-e SERVERURL=wireguard.domain.com` | External IP or domain name for docker host. Required for server mode. |
 | `-e SERVERPORT=51820` | External port for docker host. Required for server mode. |
 | `-e PEERS=1` | Number of peers to create confs for. Required for server mode. |
+| `-e PEERDNS=8.8.8.8` | DNS server set in peer/client configs. |
 | `-v /config` | Contains all relevant configuration files. |
 | `-v /lib/modules` | Maps host's modules folder. |
 | `--sysctl=` | Required for client mode. |
@@ -161,9 +163,11 @@ This image is designed for Ubuntu and Debian x86_64 systems only. During contain
 This can be run as a server or a client, based on the parameters used. 
 
 ## Server Mode
-Pass the environment variables `SERVERURL`, `SERVERPORT` and `PEERS` and the container will generate all necessary confs for both the server and the clients. The client config qr codes will be output in the docker log. They will also be saved in text and png format under `/config/peerX`.
+Pass the environment variables `SERVERURL`, `SERVERPORT`, `PEERS` and `PEERDNS`, and the container will generate all necessary confs for both the server and the clients. The client config qr codes will be output in the docker log. They will also be saved in text and png format under `/config/peerX`.
 
 If there is an existing `/config/wg0.conf`, the above environment variables won't have any affect. To add more peers/clients later on, you can run `docker exec -it wireguard /app/add-peer` while the container is running.
+
+To recreate all serer and client confs, set the above env vars, delete `/config/wg0.conf` and restart the container. Client confs will be recreated with existing private/public keys. Delete the peer folders for the keys to be recreated along with the confs.
 
 ## Client Mode
 Drop your client conf into the config folder as `/config/wg0.conf` and start the container. 

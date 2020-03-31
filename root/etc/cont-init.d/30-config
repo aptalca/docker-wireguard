@@ -59,6 +59,7 @@ ln -s /config/wg0.conf /etc/wireguard/wg0.conf
 
 if [ ! -f /config/wg0.conf ] && [ -n "$PEERS" ] && [ -n "$SERVERURL" ]; then
   SERVERPORT=${SERVERPORT:-51820}
+  PEERDNS=${PEERDNS:-8.8.8.8}
   mkdir -p /config/server
   if [ ! -f /config/server/privatekey-server ]; then
     umask 077
@@ -88,7 +89,7 @@ DUDE
 Address = 10.13.13.$(( $i + 1 ))
 PrivateKey = $(cat /config/peer${i}/privatekey-peer${i})
 ListenPort = 51820
-DNS = 10.13.13.1
+DNS = ${PEERDNS}
 
 [Peer]
 PublicKey = $(cat /config/server/publickey-server)
